@@ -1,5 +1,7 @@
 module github.com/hashicorp/terraform
 
+replace github.com/hashicorp/go-tfe => ../go-tfe
+
 require (
 	cloud.google.com/go/kms v1.10.1
 	cloud.google.com/go/storage v1.28.1
