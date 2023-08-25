@@ -16,7 +16,7 @@ import (
 	"github.com/apparentlymart/go-versions/versions"
 	version "github.com/hashicorp/go-version"
 	"github.com/hashicorp/hcl/v2"
-
+	"github.com/hashicorp/hcl/v2/hclsyntax"
 	"github.com/hashicorp/terraform/internal/addrs"
 	"github.com/hashicorp/terraform/internal/configs"
 	"github.com/hashicorp/terraform/internal/configs/configload"
@@ -159,6 +159,12 @@ func (i *ModuleInstaller) moduleInstallWalker(ctx context.Context, manifest mods
 				// Because we descend into modules which have errors, we need
 				// to look out for this case, but the config loader's
 				// diagnostics will report the error later.
+				return nil, nil, diags
+			}
+
+			if !hclsyntax.ValidIdentifier(req.Name) {
+				// An module with an invalid name shouldn't be installed at all since
+				// it allows path traversal vulnerabilities.
 				return nil, nil, diags
 			}
 
